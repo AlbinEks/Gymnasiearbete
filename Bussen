@@ -1,0 +1,32 @@
+void initigering(); //Deklarerar initigeringen
+int AD1, x; //Deklarerar variabeln AD1
+
+void main(){
+     initigering();
+     Portb = 0; //Släcker lamporna vid på sidan om bussen
+     
+     while(1){
+     AD1 = ADC_Read(0) >> 2;   /*Läser av värdet som den optiska givaren ger, högerskiftar värdet
+     och sätter det till en variabel*/
+     delay_ms(10); //Sätter en timer på 10 ms
+
+     if(AD1 > 145){ /*Om värdet som läses av från den optiska givare är större än 145 bitar ska lamporna på
+     sidan av bussen blicka i intervall, 7 gånger efter att det upptäckts något framför bussen*/
+            for(x = 0; x < 7; x++){  //Blinkar 7 gånger
+                  portb = 0xC0;  //Sätter lamporna till aktiva
+                  delay_ms(100);
+                  portb = 0; //Sätter lamporna till avstänga
+                  delay_ms(500);
+                     }
+       }
+     }
+}
+
+void initigering(){
+     OSCCON =0x77;
+     anselh = 0x00;
+     ansel = 0x01;
+     TRISA =0xFF; //Sätter PortA till ingångar
+     TRISB =0x00; //Sätter PortB till utgångar
+     TRISC =0x00; //Sätter PortC till utgångar
+}
